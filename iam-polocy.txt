@@ -3,5 +3,5 @@ for cloud watchlogs service we want to give actions like
                                                   - CreateLogGroup
                                                   - CreateLogGroup
                                                   - PutLogEvents  for all resources.
-and we want to create role for ec2, and attach this role to ec2 instance
+and we want to create role for ec2 and attach policy as above created, and attach this role to ec2 instance
                                                   
