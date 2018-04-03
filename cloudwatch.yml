@@ -1,0 +1,80 @@
+---
+- hosts: amazon
+  become: True
+  tasks:
+  - name: installing cloudwatchlog agent and httpd
+    yum:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - httpd
+      - awslogs
+  - name: Ansible delete file example
+    file:
+      path: /etc/awslogs/awscli.conf
+      state: absent
+  - name: Ansible delete awslogs file example
+    file:
+      path: /etc/awslogs/awslogs.conf
+      state: absent
+  - name: installing cloudwatchlog agent and httpd
+    service:
+      name: "{{item}}"
+      state: started
+      enabled: yes
+    with_items:
+      - httpd
+      - awslogs
+  - name: coping files
+    copy:
+      src: ./awslogs.conf
+      dest: /etc/awslogs/
+    notify:
+      - restart awslogs
+  - name: coping files
+    copy:
+      src: ./awscli.conf
+      dest: /etc/awslogs/
+    notify:
+      - restart awslogs
+  handlers:
+  - name: restart awslogs
+    service:
+      name: awslogs
+      state: restarted
+
+
+
+
+
+
+
+
+  # - name: coping index.html
+  #   copy:
+  #     src: ./awscli.conf
+  #     dest: /etc/awslogs/
+  # - name: coping index.html
+  #   copy:
+  #     src: ./awslogs.conf
+  #     dest: /etc/awslogs/
+  #   notify:
+  #     - restart apache server
+  # handlers:
+  # - name: restart apache server
+  #   service:
+  #     name: httpd
+  #     state: restarted
+  # - name: make sure mysql listens from all the hosts
+  #   lineinfile: dest=/etc/awslogs/a.txt regexp='^ansible_user' line='ansible_user=ec2-user'
+  # - name: coping index.html
+  #   copy:
+  #     src: ./index.html
+  #     dest: /var/www/html
+  #   notify:
+  #     - restart apache server
+  # handlers:
+  # - name: restart apache server
+  #   service:
+  #     name: httpd
+  #     state: restarted
